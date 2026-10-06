@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+
+<h1>New Registration</h1>
+
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<form action="/enrollments" method="POST" class="form">
+  <label>Student *
+    <select name="student" required>
+      <option value="">- choose a student -</option>
+      <% students.forEach(s => { %>
+        <option value="<%= s._id %>" <%= form.student === String(s._id) ? 'selected' : '' %>>
+          <%= s.studentId %> - <%= s.fullName %> (<%= s.program %>)
+        </option>
+      <% }) %>
+    </select>
+  </label>
+
+  <label>Course *
+    <select name="course" required>
+      <option value="">- choose a course -</option>
+      <% courses.forEach(c => {
+           const taken = countMap[String(c._id)] || 0;
+           const full  = taken >= c.capacity; %>
+        <option value="<%= c._id %>"
+                <%= form.course === String(c._id) ? 'selected' : '' %>
+                <%= full ? 'disabled' : '' %>>
+          <%= c.code %> - <%= c.title %>
+          (<%= taken %>/<%= c.capacity %>) <%= full ? '- FULL' : '' %>
+        </option>
+      <% }) %>
+    </select>
+  </label>
+
+  <p class="hint">The semester is inherited automatically from the selected course.</p>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a href="/enrollments" class="btn">Cancel</a>
+  </div>
+</form>
+
+<%- include('../partials/footer') %>

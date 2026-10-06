@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1><%= student.fullName %></h1>
+  <div class="actions">
+    <a class="btn btn-primary" href="/students/<%= student._id %>/edit">Edit</a>
+    <form action="/students/<%= student._id %>?_method=DELETE" method="POST"
+          onsubmit="return confirm('Delete this student and all their registrations?');">
+      <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="meta">
+    <li><strong>Student ID:</strong> <span class="tag"><%= student.studentId %></span></li>
+    <li><strong>Email:</strong> <%= student.email %></li>
+    <li><strong>Program:</strong> <%= student.program %></li>
+    <li><strong>Year:</strong> <%= student.year %></li>
+    <li><strong>Registered since:</strong> <%= student.createdAt.toDateString() %></li>
+  </ul>
+</div>
+
+<h2>Course Registrations</h2>
+
+<% if (enrollments.length === 0) { %>
+  <p class="empty">Not registered for any course yet.
+     <a href="/enrollments/new">Register now</a>.</p>
+<% } else { %>
+<table>
+  <thead>
+    <tr><th>Code</th><th>Course</th><th>Credits</th><th>Semester</th><th>Status</th><th>Grade</th><th></th></tr>
+  </thead>
+  <tbody>
+    <% enrollments.forEach(e => { %>
+      <tr>
+        <% if (e.course) { %>
+          <td><a href="/courses/<%= e.course._id %>"><span class="tag"><%= e.course.code %></span></a></td>
+          <td><%= e.course.title %></td>
+          <td><%= e.course.credits %></td>
+        <% } else { %>
+          <td colspan="3">Course removed</td>
+        <% } %>
+        <td><%= e.semester %></td>
+        <td><span class="badge badge-<%= e.status === 'enrolled' ? 'ok' : (e.status === 'dropped' ? 'full' : 'warn') %>">
+          <%= e.status %></span></td>
+        <td><%= e.grade || '-' %></td>
+        <td>
+          <form action="/enrollments/<%= e._id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Drop this course?');">
+            <button class="btn btn-sm btn-danger" type="submit">Drop</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<%- include('../partials/footer') %>

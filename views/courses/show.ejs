@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1><span class="tag"><%= course.code %></span> <%= course.title %></h1>
+  <div class="actions">
+    <a class="btn btn-primary" href="/courses/<%= course._id %>/edit">Edit</a>
+    <form action="/courses/<%= course._id %>?_method=DELETE" method="POST"
+          onsubmit="return confirm('Delete this course and all its registrations?');">
+      <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="meta">
+    <li><strong>Instructor:</strong> <%= course.instructor %></li>
+    <li><strong>Credits:</strong> <%= course.credits %></li>
+    <li><strong>Semester:</strong> <%= course.semester %></li>
+    <li><strong>Seats:</strong> <%= seatsTaken %> / <%= course.capacity %>
+      <% if (seatsLeft <= 0) { %><span class="badge badge-full">Full</span>
+      <% } else { %><span class="badge badge-ok"><%= seatsLeft %> left</span><% } %>
+    </li>
+  </ul>
+  <% if (course.description) { %>
+    <p class="description"><%= course.description %></p>
+  <% } %>
+</div>
+
+<h2>Class Roster</h2>
+
+<% if (roster.length === 0) { %>
+  <p class="empty">No students registered yet.</p>
+<% } else { %>
+<table>
+  <thead>
+    <tr><th>Student ID</th><th>Name</th><th>Program</th><th>Status</th><th>Grade</th><th></th></tr>
+  </thead>
+  <tbody>
+    <% roster.forEach(e => { %>
+      <tr>
+        <% if (e.student) { %>
+          <td><span class="tag"><%= e.student.studentId %></span></td>
+          <td><a href="/students/<%= e.student._id %>"><%= e.student.fullName %></a></td>
+          <td><%= e.student.program %></td>
+        <% } else { %>
+          <td colspan="3">Student removed</td>
+        <% } %>
+        <td><span class="badge badge-<%= e.status === 'enrolled' ? 'ok' : 'warn' %>"><%= e.status %></span></td>
+        <td><%= e.grade || '-' %></td>
+        <td>
+          <form action="/enrollments/<%= e._id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Drop this student from the course?');">
+            <button class="btn btn-sm btn-danger" type="submit">Drop</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<%- include('../partials/footer') %>

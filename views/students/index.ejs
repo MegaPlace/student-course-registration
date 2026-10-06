@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Students</h1>
+</div>
+
+<form class="student-search" method="GET" action="/students" role="search">
+  <label for="student-search-query">
+    Search students
+    <input id="student-search-query" type="search" name="q" value="<%= query %>"
+           placeholder="Name or student ID">
+  </label>
+  <button class="btn btn-primary" type="submit">Search</button>
+  <% if (searchTerm) { %>
+    <a class="btn btn-ghost" href="/students">Clear</a>
+  <% } %>
+</form>
+
+<% if (searchTerm) { %>
+  <p class="search-summary"><%= students.length %> results for '<%= searchTerm %>'</p>
+<% } %>
+
+<% if (students.length === 0) { %>
+  <div class="students-empty">
+    <span class="students-empty-icon" aria-hidden="true">📚</span>
+    <h2><%= searchTerm ? 'No students found' : 'No students yet' %></h2>
+    <% if (searchTerm) { %>
+      <p>No matches for "<%= searchTerm %>".</p>
+    <% } else { %>
+      <p>Start by adding a student to your registrar.</p>
+    <% } %>
+    <a href="/students/new" class="btn btn-primary">+ Register Student</a>
+  </div>
+<% } else { %>
+<section class="students-table-card" aria-labelledby="students-table-title">
+  <div class="students-table-heading">
+    <h2 id="students-table-title">All Students (<%= students.length %>)</h2>
+    <a href="/students/new" class="btn btn-primary">+ Register Student</a>
+  </div>
+  <div class="table-scroll">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Student</th><th>Program</th><th>Year</th><th>Courses</th><th class="actions-column">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% students.forEach(s => { %>
+      <tr>
+        <td>
+          <div class="student-identity">
+            <div class="student-name-line">
+              <a class="student-name" href="/students/<%= s._id %>"><%= s.fullName %></a>
+              <span class="tag"><%= s.studentId %></span>
+            </div>
+            <span class="student-email"><%= s.email %></span>
+          </div>
+        </td>
+        <td><%= s.program %></td>
+        <td><span class="year-pill">Y<%= s.year %></span></td>
+        <td><span class="course-count <%= (countMap[String(s._id)] || 0) > 0 ? 'course-count--positive' : 'course-count--zero' %>"><%= countMap[String(s._id)] || 0 %></span></td>
+        <td class="actions actions-column student-row-actions">
+          <a class="btn btn-sm" href="/students/<%= s._id %>/edit">Edit</a>
+          <form action="/students/<%= s._id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Delete this student and all their registrations?');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/footer') %>

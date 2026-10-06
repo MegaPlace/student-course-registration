@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Registrations</h1>
+  <a href="/enrollments/new" class="btn btn-primary">+ New Registration</a>
+</div>
+
+<div class="filters">
+  <a href="/enrollments" class="btn btn-sm <%= activeStatus === '' ? 'btn-primary' : '' %>">All</a>
+  <a href="/enrollments?status=enrolled"  class="btn btn-sm <%= activeStatus === 'enrolled' ? 'btn-primary' : '' %>">Enrolled</a>
+  <a href="/enrollments?status=completed" class="btn btn-sm <%= activeStatus === 'completed' ? 'btn-primary' : '' %>">Completed</a>
+  <a href="/enrollments?status=dropped"   class="btn btn-sm <%= activeStatus === 'dropped' ? 'btn-primary' : '' %>">Dropped</a>
+</div>
+
+<% if (enrollments.length === 0) { %>
+  <p class="empty">No registrations found.</p>
+<% } else { %>
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Student</th><th>Course</th><th>Semester</th><th>Update status / grade</th><th>Drop</th></tr>
+  </thead>
+  <tbody>
+    <% enrollments.forEach(e => { %>
+      <tr>
+        <td>
+          <% if (e.student) { %>
+            <a href="/students/<%= e.student._id %>"><%= e.student.fullName %></a>
+            <div class="sub"><%= e.student.studentId %></div>
+          <% } else { %>-<% } %>
+        </td>
+        <td>
+          <% if (e.course) { %>
+            <a href="/courses/<%= e.course._id %>"><span class="tag"><%= e.course.code %></span></a>
+            <div class="sub"><%= e.course.title %></div>
+          <% } else { %>-<% } %>
+        </td>
+        <td><%= e.semester %></td>
+        <td>
+          <form action="/enrollments/<%= e._id %>?_method=PUT" method="POST" class="inline-form">
+            <select name="status">
+              <% ['enrolled','completed','dropped'].forEach(s => { %>
+                <option value="<%= s %>" <%= e.status === s ? 'selected' : '' %>><%= s %></option>
+              <% }) %>
+            </select>
+            <select name="grade">
+              <option value="">no grade</option>
+              <% ['A','B+','B','C+','C','D','F'].forEach(g => { %>
+                <option value="<%= g %>" <%= e.grade === g ? 'selected' : '' %>><%= g %></option>
+              <% }) %>
+            </select>
+            <button class="btn btn-sm" type="submit">Save</button>
+          </form>
+        </td>
+        <td>
+          <form action="/enrollments/<%= e._id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Drop this registration?');">
+            <button class="btn btn-sm btn-danger" type="submit">Drop</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<% } %>
+
+<%- include('../partials/footer') %>

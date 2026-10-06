@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+
+<h1>Edit Course - <%= course.code %></h1>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<%- include('_form', {
+      action: `/courses/${course._id}?_method=PUT`,
+      submitLabel: 'Save Changes',
+      form }) %>
+
+<%- include('../partials/footer') %>

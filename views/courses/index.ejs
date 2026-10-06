@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Courses</h1>
+  <a href="/courses/new" class="btn btn-primary">+ Add Course</a>
+</div>
+
+<% if (courses.length === 0) { %>
+  <p class="empty">No courses yet. <a href="/courses/new">Create the first one</a>.</p>
+<% } else { %>
+<table>
+  <thead>
+    <tr>
+      <th>Code</th><th>Title</th><th>Instructor</th>
+      <th>Credits</th><th>Semester</th><th>Seats</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% courses.forEach(c => {
+         const taken = countMap[String(c._id)] || 0;
+         const full  = taken >= c.capacity; %>
+      <tr>
+        <td><a href="/courses/<%= c._id %>"><span class="tag"><%= c.code %></span></a></td>
+        <td><%= c.title %></td>
+        <td><%= c.instructor %></td>
+        <td><%= c.credits %></td>
+        <td><%= c.semester %></td>
+        <td>
+          <%= taken %> / <%= c.capacity %>
+          <% if (full) { %><span class="badge badge-full">Full</span><% } %>
+        </td>
+        <td class="actions">
+          <a class="btn btn-sm" href="/courses/<%= c._id %>/edit">Edit</a>
+          <form action="/courses/<%= c._id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Delete this course and all its registrations?');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<%- include('../partials/footer') %>

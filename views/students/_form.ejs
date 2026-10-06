@@ -1,0 +1,42 @@
+<form action="<%= action %>" method="POST" class="form">
+  <div class="form-heading">
+    <p class="form-eyebrow">STUDENT RECORD</p>
+    <h2>Student details</h2>
+    <p class="form-intro">Add the student's information below.</p>
+  </div>
+
+  <label><span class="form-label">Student ID *</span>
+    <input type="text" name="studentId" placeholder="e.g. S1006"
+           value="<%= form.studentId || '' %>" required>
+    <small class="form-hint">Format S1001 · uppercase letters and digits</small>
+  </label>
+
+  <div class="grid-2">
+    <label><span class="form-label">First Name *</span>
+      <input type="text" name="firstName" value="<%= form.firstName || '' %>" required>
+    </label>
+    <label><span class="form-label">Last Name *</span>
+      <input type="text" name="lastName" value="<%= form.lastName || '' %>" required>
+    </label>
+  </div>
+
+  <label><span class="form-label">Email *</span>
+    <input type="email" name="email" placeholder="name@campus.edu"
+           value="<%= form.email || '' %>" required>
+  </label>
+
+  <label><span class="form-label">Program</span>
+    <input type="text" name="program" placeholder="Computer Science"
+           value="<%= form.program || '' %>">
+  </label>
+
+  <label><span class="form-label">Year</span>
+    <input type="number" name="year" min="1" max="6"
+           value="<%= form.year || 1 %>">
+  </label>
+
+  <div class="form-actions entity-form-actions">
+    <a href="/students" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary"><%= submitLabel %></button>
+  </div>
+</form>

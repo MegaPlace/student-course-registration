@@ -1,0 +1,8 @@
+<%- include('../partials/header') %>
+
+<h1>Add Course</h1>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<%- include('_form', { action: '/courses', submitLabel: 'Create Course', form }) %>
+
+<%- include('../partials/footer') %>

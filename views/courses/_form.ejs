@@ -1,0 +1,45 @@
+<form action="<%= action %>" method="POST" class="form">
+  <div class="form-heading">
+    <p class="form-eyebrow">COURSE CATALOG</p>
+    <h2>Course details</h2>
+    <p class="form-intro">Set the course information and registration capacity.</p>
+  </div>
+
+  <label><span class="form-label">Course Code *</span>
+    <input type="text" name="code" placeholder="CS101"
+           value="<%= form.code || '' %>" required>
+  </label>
+
+  <label><span class="form-label">Course Title *</span>
+    <input type="text" name="title" value="<%= form.title || '' %>" required>
+  </label>
+
+  <label><span class="form-label">Instructor *</span>
+    <input type="text" name="instructor" value="<%= form.instructor || '' %>" required>
+  </label>
+
+  <div class="grid-2">
+    <label><span class="form-label">Credits *</span>
+      <input type="number" name="credits" min="1" max="6"
+             value="<%= form.credits || 3 %>" required>
+    </label>
+    <label><span class="form-label">Capacity *</span>
+      <input type="number" name="capacity" min="1"
+             value="<%= form.capacity || 30 %>" required>
+    </label>
+  </div>
+
+  <label><span class="form-label">Semester *</span>
+    <input type="text" name="semester" placeholder="2026-Spring"
+           value="<%= form.semester || '' %>" required>
+  </label>
+
+  <label><span class="form-label">Description</span>
+    <textarea name="description" rows="4"><%= form.description || '' %></textarea>
+  </label>
+
+  <div class="form-actions entity-form-actions">
+    <a href="/courses" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary"><%= submitLabel %></button>
+  </div>
+</form>

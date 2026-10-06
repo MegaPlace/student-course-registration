@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | Course Registration</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav class="container">
+      <a href="/" class="logo"><span class="brand-mark" aria-hidden="true">R</span><span>Registrar</span></a>
+      <button class="nav-toggle" type="button" aria-controls="primary-navigation" aria-expanded="false" aria-label="Open navigation menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="/students">Students</a>
+        <a href="/courses">Courses</a>
+        <a href="/enrollments">Registrations</a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"></path>
+          </svg>
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+          </svg>
+        </button>
+        <a href="/enrollments/new" class="btn btn-primary btn-sm">+ Register</a>
+      </div>
+    </nav>
+  </header>
+  <main class="container">
+<script>
+  (() => {
+    const header = document.querySelector('header');
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const root = document.documentElement;
+    const themeToggle = document.querySelector('.theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+
+    const updateHeaderBorder = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 0);
+    };
+
+    const closeNavigation = () => {
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Open navigation menu');
+      navLinks.classList.remove('is-open');
+    };
+
+    updateHeaderBorder();
+    window.addEventListener('scroll', updateHeaderBorder, { passive: true });
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navToggle.getAttribute('aria-expanded') !== 'true';
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+      navLinks.classList.toggle('is-open', isOpen);
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeNavigation);
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeNavigation();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.matchMedia('(min-width: 701px)').matches) closeNavigation();
+    });
+
+    if (savedTheme === 'light') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.dataset.theme = 'dark';
+    }
+
+    const updateThemeToggle = () => {
+      const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      themeToggle.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
+      themeToggle.setAttribute('title', `Switch to ${nextTheme} theme`);
+    };
+
+    updateThemeToggle();
+    themeToggle.addEventListener('click', () => {
+      const useDarkTheme = root.dataset.theme !== 'dark';
+      if (useDarkTheme) {
+        root.dataset.theme = 'dark';
+      } else {
+        root.removeAttribute('data-theme');
+      }
+      localStorage.setItem('theme', useDarkTheme ? 'dark' : 'light');
+      updateThemeToggle();
+    });
+  })();
+</script>

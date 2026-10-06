@@ -1,0 +1,98 @@
+<%- include('partials/header') %>
+
+<section class="dashboard-hero">
+  <p class="dashboard-eyebrow">STUDENT COURSE REGISTRATION</p>
+  <h1 class="dashboard-title">Registrar</h1>
+  <p class="dashboard-subtitle">Spring 2026 · 5 students · 5 courses</p>
+</section>
+
+<div class="stats dashboard-stats">
+  <article class="stat stat-students">
+    <span class="stat-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8" r="3.5"></circle>
+        <path d="M3 20a6 6 0 0 1 12 0M16 5.5a3.5 3.5 0 0 1 0 6.8M18 14a5 5 0 0 1 3 4.6"></path>
+      </svg>
+    </span>
+    <div class="stat-content">
+      <div class="num"><%= studentCount %></div>
+      <div class="label">Students</div>
+    </div>
+    <svg class="stat-sparkline" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="stat-sparkline-area" d="M1 26 C14 25 17 18 29 20 S47 24 59 15 S78 19 90 10 S108 12 119 4 L119 32 L1 32 Z"></path>
+      <path class="stat-sparkline-line" d="M1 26 C14 25 17 18 29 20 S47 24 59 15 S78 19 90 10 S108 12 119 4"></path>
+    </svg>
+  </article>
+  <article class="stat stat-courses">
+    <span class="stat-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"></path>
+        <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8"></path>
+      </svg>
+    </span>
+    <div class="stat-content">
+      <div class="num"><%= courseCount %></div>
+      <div class="label">Courses</div>
+    </div>
+    <svg class="stat-sparkline" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="stat-sparkline-area" d="M1 24 C15 23 18 22 30 19 S46 21 59 15 S76 17 89 12 S107 9 119 5 L119 32 L1 32 Z"></path>
+      <path class="stat-sparkline-line" d="M1 24 C15 23 18 22 30 19 S46 21 59 15 S76 17 89 12 S107 9 119 5"></path>
+    </svg>
+  </article>
+  <article class="stat stat-registrations">
+    <span class="stat-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+        <path d="M16 3v4M8 3v4M3 10h18M8 15l2.2 2.2L16 12"></path>
+      </svg>
+    </span>
+    <div class="stat-content">
+      <div class="num"><%= enrollmentCount %></div>
+      <div class="label">Active Registrations</div>
+    </div>
+    <svg class="stat-sparkline" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="stat-sparkline-area" d="M1 27 C14 26 19 17 31 20 S48 15 60 18 S77 10 90 12 S107 7 119 3 L119 32 L1 32 Z"></path>
+      <path class="stat-sparkline-line" d="M1 27 C14 26 19 17 31 20 S48 15 60 18 S77 10 90 12 S107 7 119 3"></path>
+    </svg>
+  </article>
+</div>
+
+<h2>Recent Registrations</h2>
+
+<% if (recent.length === 0) { %>
+  <p class="empty">No registrations yet.
+    <a href="/enrollments/new">Register a student</a>.</p>
+<% } else { %>
+  <div class="registration-list">
+    <% recent.forEach(e => { %>
+      <article class="registration-item">
+        <span class="registration-dot <%= e.status === 'enrolled' ? 'registration-dot-active' : 'registration-dot-other' %>" aria-hidden="true"></span>
+        <div class="registration-content">
+          <div class="registration-heading">
+            <h3 class="registration-student">
+              <% if (e.student) { %>
+                <a href="/students/<%= e.student._id %>">
+                  <%= e.student.firstName %> <%= e.student.lastName %>
+                </a>
+                <span class="tag"><%= e.student.studentId %></span>
+              <% } else { %>-<% } %>
+            </h3>
+            <span class="registration-date"><%= e.enrolledAt.toDateString() %></span>
+          </div>
+          <div class="registration-meta registration-subline">
+            <span class="registration-course">
+              <% if (e.course) { %>
+                <a href="/courses/<%= e.course._id %>"><%= e.course.code %></a>
+                - <%= e.course.title %>
+              <% } else { %>-<% } %>
+            </span>
+            <span class="registration-semester"><%= e.semester %></span>
+            <span class="registration-status"><%= e.status %></span>
+          </div>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>
